@@ -33,10 +33,17 @@
   for (NSString *key in self) {
     
     NSObject *value = [self valueForKey:key];
-    if([value isKindOfClass:[NSString class]])
-      [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], [((NSString*)value) mk_urlEncodedString]];
-    else
-      [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], value];
+    if ([value isKindOfClass:[NSString class]]) {
+        [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], [((NSString*)value) mk_urlEncodedString]];
+    }
+    else if ([value isKindOfClass:[NSArray class]]) {
+        for (id item in value) {
+            [string appendFormat:@"%@=%@&", [key urlEncodedString], [(NSString*)item urlEncodedString]];
+        }
+    }
+    else {
+        [string appendFormat:@"%@=%@&", [key mk_urlEncodedString], value];
+    }
   }
   
   if([string length] > 0)
